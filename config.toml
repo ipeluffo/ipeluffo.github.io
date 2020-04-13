@@ -1,0 +1,122 @@
+########## Site Settings ##########
+baseURL = "http://ipeluffo.github.io/"
+title = "Ignacio Peluffo"
+languageCode = "en"
+hasCJKLanguage = false
+
+# Change the default theme to be use when building the site with Hugo
+theme = "LoveIt"
+
+# i18n
+defaultContentLanguage = "en"
+
+# Enable generation of `robots.txt` file?
+enableRobotsTXT = true
+
+googleAnalytics = "UA-163511292-1"
+
+[author]
+  name = "Ignacio"
+  # link = "https://ipeluffo.github.io/"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      # unsafe = true
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    lineNoStart = 1
+    lineNos = true
+    lineNumbersInTable = true
+    noClasses = false
+    style = "monokai"
+    tabWidth = 4 
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 6
+
+[outputs]
+    home = ["HTML", "RSS"]
+    page = ["HTML"]
+    section = ["HTML", "RSS"]
+    taxonomy = ["HTML", "RSS"]
+    taxonomyTerm = ["HTML"]
+    # Note: https://github.com/gohugoio/hugo/issues/4528#issuecomment-508488859
+
+# Maximum number of items in the Atom & RSS feed
+[services.rss]
+    limit = -1
+
+# Privacy Info (https://gohugo.io/about/hugo-and-gdpr/)
+[privacy]
+  [privacy.googleAnalytics]
+    anonymizeIP = true
+  [privacy.youtube]
+    privacyEnhanced = true
+
+##########################################
+# Menu Settings
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    # you can add extra information before the name (HTML format is allowed), such as icons
+    pre = ""
+    name = "Posts"
+    url = "/posts/"
+    # title will be shown when you hover on this menu link
+    title = ""
+    weight = 1
+  [[menu.main]]
+    identifier = "tags"
+    pre = ""
+    name = "Tags"
+    url = "/tags/"
+    title = ""
+    weight = 2
+  [[menu.main]]
+    identifier = "categories"
+    pre = ""
+    name = "Categories"
+    url = "/categories/"
+    title = ""
+    weight = 3
+  [[menu.main]]
+    url = "/about/"
+    name = "About"
+
+##########################################
+# Theme Settings
+
+[params]
+  # LoveIt theme version
+  version = "0.1.X"
+  defaultTheme = "auto"
+  gitRepo = "https://github.com/ipeluffo"
+
+  [params.home]
+    [params.home.profile]
+      enable = true
+      #gravatarEmail = "ipeluffo@gmail.com"
+      #subtitle = "Lalal"
+      social = true
+  
+  [params.social]
+    Github = "ipeluffo"
+    Linkedin = "ignaciopeluffo"
+    Keybase = "ipeluffo"
+    Medium = "@ipeluffo"
+  
+  [params.share]
+    enable = true
+    Twitter = true
+    Linkedin = true
+    HackerNews = true
+    Reddit = true
+
+  [params.page]
+    lightgallery = true
+
+  [params.math]
+    enable = false
