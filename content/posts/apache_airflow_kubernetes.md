@@ -50,8 +50,7 @@ Client Version: version.Info{Major:"1", Minor:"17", GitVersion:"v1.17.4", GitCom
 > Kubernetes (K8s) is an open-source system for automating deployment, scaling, and management of containerized applications.
 
 ### What are we going to build?
-
-**DIAGRAM OF AIRFLOW RUNNING ON KUBERNETES**
+![](/images/airflow_on_kubernetes_schema.png "Diagram of Pods running in the cluster")
 
 ### Why Airflow on Kubernetes?
 Airflow offers a very flexible toolset to programmatically create workflows of any complexity.
