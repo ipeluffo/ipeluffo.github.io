@@ -1,9 +1,9 @@
-name: github pages
+name: hugo site build
 
 on:
   push:
     branches:
-      - sources
+      - source
 
 jobs:
   deploy:
