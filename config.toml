@@ -4,7 +4,7 @@ title = "Ignacio Peluffo"
 languageCode = "en"
 hasCJKLanguage = false
 
-# Change the default theme to be use when building the site with Hugo
+# https://hugoloveit.com/
 theme = "LoveIt"
 
 # i18n
@@ -18,6 +18,17 @@ googleAnalytics = "UA-163511292-1"
 [author]
   name = "Ignacio"
   # link = "https://ipeluffo.github.io/"
+
+# Sitemap Info
+[sitemap]
+  changefreq = "weekly"
+  filename = "sitemap.xml"
+  priority = 0.5
+
+# Permalinks Info (https://gohugo.io/content-management/urls/#permalinks)
+[Permalinks]
+  # posts = ":year/:month/:filename"
+  posts = ":filename"
 
 [markup]
   [markup.goldmark]
