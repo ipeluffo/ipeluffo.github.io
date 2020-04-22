@@ -83,10 +83,10 @@ One key thing that is not present in the image is the extra Kubernetes dependenc
 
 Despite the Dockerimage allows us to add more dependencies setting the `AIRFLOW_DEPS` 
 argument, in this tutorial we're not going to create our own custom docker image, so we're 
-using another customization available in the entrypoint script of the image:
+using another customization available in the entry point script of the image:
 [https://github.com/puckel/docker-airflow/blob/1.10.9/script/entrypoint.sh#L26-L29](https://github.com/puckel/docker-airflow/blob/1.10.9/script/entrypoint.sh#L26-L29)
 
-Thanks to that part of the entrypoint script, we're able to add a `requirements.txt` file that 
+Thanks to that part of the entry point script, we're able to add a `requirements.txt` file that 
 will be used dynamically by the entry point when starting the container. The downside of this 
 is that any new pod will need to install this dependency before starting it, making the 
 startup time slower. A better solution would be to design a custom and optimal Docker image 
@@ -109,10 +109,10 @@ In our case, we're going to create two `ConfigMap` objects described below.
 #### `ConfigMap`: `requirements.txt`
 As described above, we need to add a requirements file in order to install Airflow's Kubernetes dependency (i.e. `apache-airflow[kubernetes]`).
 
-Although there are different alternatives to implement to create the file, in this case we'll use a 
+Kubernetes provides different alternatives to create the file, in this case we'll use a 
 `ConfigMap` that will be later mounted as a `Volume` in order to create the necessary file in the pod's 
 file system. The objective of this guide is not only to show Airflow running on Kubernetes but use and 
-learn different tools that Kubernetes provides us.
+learn different tools that the latter provides us.
 
 Below is the `ConfigMap` definition:
 ```yaml
@@ -126,8 +126,10 @@ data:
 ```
 
 #### `ConfigMap`: environment variables
-In order to customise Airflow's configuration, we'll set environment variables that override the
-file configuration. To achieve this, we can define the env vars within the Kubernetes object definition or we can also create a `ConfigMap` and just configure the object to set the env vars from it.
+To customise Airflow's configuration, we'll set environment variables that override the 
+file configuration. To achieve this, we can define the env vars within the Kubernetes 
+object definition or we can also create a `ConfigMap` and just configure the object 
+to set the env vars from it.
 
 Below is the `ConfigMap` for our custom environment variables:
 ```yaml
@@ -155,32 +157,31 @@ Following is the explanation for each of the env vars:
 * `EXECUTOR`: we need this one to dynamically set the Airflow's executor. The [docker image entrypoint script uses this env var](https://github.com/puckel/docker-airflow/blob/1.10.9/script/entrypoint.sh#L13) 
 to set the Airflow executor configuration.
 * `POSTGRES_`: these env vars are needed since our deployment needs a Postgres server running to which our Airflow components will connect to store information about DAGs and Airflow such as [connections](https://airflow.apache.org/docs/stable/concepts.html#connections), [variables](https://airflow.apache.org/docs/stable/concepts.html#variables) and DAGs' information such as tasks' state.
-* `LOAD_EX`: this env var is used to load Airflow's example DAGs. Feel free to disable it if you want to not see all default DAGs.
+* `LOAD_EX`: this env var is used to load Airflow's example DAGs. Feel free to disable it if you don't want to see or use default DAGs.
 * `AIRFLOW__KUBERNETES__KUBE_CLIENT_REQUEST_ARGS`: when developing this guide, I found that Airflow failed 
-to parse the configuration file and apparently this value was causing some issues because of the double 
+to parse the configuration file and this value was causing some issues because of the double 
 brackets in the [configuration value in the docker image](https://github.com/puckel/docker-airflow/blob/1.10.9/config/airflow.cfg#L934).
-* `AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY`: all env vars with prefix `AIRFLOW__KUBERNETES__` are
-specifically for Kubernetes integration on Airflow. As the name suggest, this env var is to specify the
+* `AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY`: all env vars with the prefix `AIRFLOW__KUBERNETES__` are
+specifically for Kubernetes integration on Airflow. As the name suggests, this env var is to specify the
 docker image to be used for workers. In the context of Kubernetes, workers will be run on a Pod.
 * `AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG`: this env var is used to specify the docker image tag.
 * `AIRFLOW__KUBERNETES__DAGS_VOLUME_HOST`: we'll see this in more detail later. For now, this specifies the 
-path of the volume in the host (i.e. cluster node) where DAGs file are stored.
+path of the volume in the host (i.e. cluster node) where DAGs files are stored.
 * `AIRFLOW__KUBERNETES__LOGS_VOLUME_CLAIM`: this env var specifies the Kubernetes volume claim to use to
 store and read logs. We'll talk about this in more detail later.
 * `AIRFLOW__KUBERNETES__ENV_FROM_CONFIGMAP_REF`: this specifies the name of the `ConfigMap` that stores the 
-env vars which actually is this one. This will allow workers to load env vars from this `ConfigMap` when 
-running.
+env vars (i.e. this one). This will allow workers to load env vars from this `ConfigMap` when running.
 
 ### Volumes
-For each Airflow component (i.e. Kubernetes pod) we're going to setup three volumes for different purposes using multiple Kubernetes tools:
+For each Airflow component (i.e. Kubernetes pod) we're going to set up three volumes for different purposes using multiple Kubernetes tools:
 1. Volume for Logs
 2. Volume for requirements file
 3. Volume for DAGs
 
 #### Volume: Logs
-There are multiple alternatives to save Airflow's logs on a Kubernetes deployment. In this guide we'll 
-define a Volume that we'll allow us to persist logs from all Airflow's components. If we decide to not set
-a volume, then Airflow's workers logs would be lost after they finish.
+There are multiple alternatives to save Airflow's logs on a Kubernetes deployment. In this guide, we'll 
+define a Volume that will allow us to persist logs from all Airflow's components. If we decide to not set
+a volume, then Airflow's workers' logs would be lost after they finish.
 
 To achieve this, we need to create a `PersistenVolumeClaim` object:
 ```yaml
@@ -209,7 +210,7 @@ access mode to allow them to use it.
 
 #### Volume: requirements file
 As mentioned in the section of `ConfigMap`s, the requirements file is declared as a `ConfigMap` which will
-be mounted as a file using a volume. This volume is define within a Kubernetes object and looks like:
+be mounted as a file using a volume. This volume is defined within a Kubernetes object and looks like:
 ```yaml
 - name: requirements-configmap
   configMap:
@@ -219,10 +220,10 @@ be mounted as a file using a volume. This volume is define within a Kubernetes o
 We need to set `configMap.name` the same value that we use in the config map definition.
 
 #### Volume: DAGs directory
-For the DAGs directory, we'll set something only suitable for local deployments that gives us a lot of 
-flexibility when doing tests when we need to test changes on DAGs.
+For the DAGs directory, we'll use a tool that is only suitable for a local deployment that gives 
+us a lot of flexibility when doing tests when we need to test changes on DAGs.
 
-The definition of this volume looks like the definition below:
+Below is the definition of this volume:
 ```yaml
 - name: dags-host-volume
   hostPath:
@@ -232,9 +233,10 @@ The definition of this volume looks like the definition below:
 
 In this case we mount a volume of type [`hostPath`](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath).
 This means that the pod's volume is attached to a path (could be a file or a directory) within the cluster
-node. This last part is important, *the path should exists in the cluster node and not in the host machine*.
+node. This last point is very important, *the path should exist in the cluster node and not in the host machine*.
 
-Then, to make this works we can put the files into a directory in the host machine or mount a host directory into the Kubernetes node (in our case the `minikube` cluster).
+Then, to make this work we can put the files into a directory in the host machine or mount a host directory into 
+the Kubernetes node (in our case the `minikube` cluster).
 
 Since this a test environment where we'd like to easily change DAGs and run tests, we'll mount a host 
 folder into the minikube cluster running the following command:
@@ -260,17 +262,18 @@ When running this command you should see an output like this:
 📌  NOTE: This process must stay alive for the mount to be accessible ...
 ```
 
-Finally, having the mount running, pods will be able to mount cluster node's folder where they'll be able to read and write files which will be written into our host machine.
+Finally, having the mount running, pods will be able to mount the cluster node's folder where they'll 
+be able to read and write files which will be written into our host machine.
 
 ### PostgreSQL
 In this and the following sections, we'll define the necessary Kubernetes objects to run the 
 pods that we need to run Airflow.
 
-First, we'll define a `Deployment` and a `Service` to run a PostgreSQL instance where Airflow 
+First, we'll define a `Deployment` and a `Service` to run a PostgreSQL instance that Airflow 
 will use. We can also define a `Pod` object, but in this case, they'll be automatically created
 when we create the `Deployment`.
 
-If you're not familiar with thes Kubernetes concepts, I recommend having a quick read to the
+If you're not familiar with these Kubernetes concepts, I recommend having a quick read to the
 links below:
 * `Deployment`: [https://kubernetes.io/docs/concepts/workloads/controllers/deployment/](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 * `Service`: [https://kubernetes.io/docs/concepts/services-networking/service/](https://kubernetes.io/docs/concepts/services-networking/service/)
@@ -289,7 +292,7 @@ spec:
     targetPort: 5432
 ```
 
-This Service object will allow us to expone the pod port to be able to connect to the 
+This Service object will allow us to expose the pod port to be able to connect to the 
 PostgreSQL instance. Kubernetes cluster runs a DNS service that will allow other pods to
 connect to this service using its name (i.e. `postgres`).
 
@@ -303,14 +306,11 @@ spec:
   selector:
     matchLabels:
       app: postgres
-
   replicas: 1
-
   template:
     metadata:
       labels:
         app: postgres
-
     spec:
       containers:
       - name: postgres
@@ -331,7 +331,7 @@ spec:
 ```
 
 For the deployment, we specify that the number of replicas should be one and the necessary env 
-vars to setup the default user and database to be created when the container starts.
+vars to set up the default user and database to be created when the container starts.
 
 ### Airflow webserver
 Now, we're going to go through the definition of the `Service` and `Deployment` objects for
@@ -369,19 +369,15 @@ metadata:
   name: airflow-webserver
   labels:
     app: airflow-k8s
-
 spec:
   selector:
     matchLabels:
       app: airflow-webserver
-
   replicas: 1
-
   template:
     metadata:
       labels:
         app: airflow-webserver
-
     spec:
       containers:
       - name: airflow-webserver
@@ -416,15 +412,15 @@ spec:
 ```
 
 Few comments about this definition:
-* `volumes` section: as mentioned on the `Volumes` section of this guide, we need to define the volumes to be used by the pods. So in this case we define one volume for the logs, one for the requirements file and one for the logs persistent volume claim.
+* `volumes` section: as mentioned on the `Volumes` section of this guide, we need to define the volumes to be used by the pods. So, in this case, we define one volume for the logs, one for the requirements file and one for the logs persistent volume claim.
 * `volumeMounts`: to be able to use the volumes, we need to specify how they should be mounted on within the pod and this section is used for that.
 * `ports`: define the pod's port to expose.
-* `resources`: in this example we just specified the maximum amount of memory allowed to be used by the pod.
+* `resources`: in this example, we just specified the maximum amount of memory allowed to be used by the pod.
 
 ### Airflow scheduler
 In the case of the scheduler, we only need to create a deployment since it doesn't expose any
-service that other workers need to connect to it. However, scheduler is responsible of creating
-workers, in this case pods, to run Airflow's tasks so we need to give the needed permissions
+service that other workers need to connect to. However, the scheduler is responsible of creating
+workers (i.e. pods) to run Airflow's tasks so we need to give the needed permissions
 to the scheduler to be able to manage pods on the cluster like creating and deleting them. To 
 achieve this, we need to define a `ClusterRole` and `ClusterRoleBinding` Kubernetes objects.
 
@@ -436,19 +432,15 @@ metadata:
   name: airflow-scheduler
   labels:
     app: airflow-k8s
-
 spec:
   selector:
     matchLabels:
       app: airflow-scheduler
-
   replicas: 1
-
   template:
     metadata:
       labels:
         app: airflow-scheduler
-
     spec:
       containers:
       - name: airflow-scheduler
@@ -646,11 +638,12 @@ service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   25d
 ```
 
 ## Conclusion
-We reached the end of this tutorial and we could see that running a whole Airflow deployment
-on a local Kubernetes cluster was straightforward.
+We reached the end of this guide where we saw that running a whole Airflow deployment
+on a local Kubernetes cluster is straightforward.
 
-As mentioned in the beginning, the objective of this guide was to use several tools from 
+As mentioned at the beginning, the objective of this guide is to use several tools from 
 Kubernetes and many things should be changed for a deployment in a production environment.
-This deployment allow to quickly do tests, if you have a DAG you should be able to put it in the `dags` folder and immediately see it on the UI.
+This deployment allows developers to quickly do tests, if you have a DAG you should be able 
+to put it in the `dags` folder and immediately see it on the UI.
 
-So that's it for the tutorial, I hope it was useful and help you to continue learning about Kubernetes and Apache Airflow.
+So that's it for the guide, I hope it was useful and help you to continue learning about Kubernetes and Apache Airflow.
