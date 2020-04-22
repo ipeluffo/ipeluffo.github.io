@@ -2,7 +2,7 @@
 cluster. This means that all Airflow componentes (i.e. webserver, scheduler and workers)
 would run within the cluster."><meta property="og:type" content="article"><meta property="og:url" content="http://ipeluffo.github.io/apache_airflow_kubernetes/"><meta property="article:published_time" content="2020-04-12T19:29:05+01:00"><meta property="article:modified_time" content="2020-04-12T19:29:05+01:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Running Apache Airflow locally on Kubernetes (minikube)"><meta name=twitter:description content="The goal of this guide is to show how to run Airflow entirely on a Kubernetes
 cluster. This means that all Airflow componentes (i.e. webserver, scheduler and workers)
-would run within the cluster."><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel=canonical href=http://ipeluffo.github.io/apache_airflow_kubernetes/><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><link rel=stylesheet href=/css/style.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Running Apache Airflow locally on Kubernetes (minikube)","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/ipeluffo.github.io\/apache_airflow_kubernetes\/"},"genre":"posts","keywords":"apache airflow, airflow, kubernetes","wordcount":3052,"url":"http:\/\/ipeluffo.github.io\/apache_airflow_kubernetes\/","datePublished":"2020-04-12","dateModified":"2020-04-12","author":{"@type":"Person","name":"Ignacio"},"description":""}</script></head><body><script>if(!window.localStorage||!window.localStorage.getItem('theme')){window.isDark=window.matchMedia('(prefers-color-scheme: dark)').matches;}else{window.isDark=(window.localStorage&&window.localStorage.getItem('theme'))==='dark';}
+would run within the cluster."><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel=canonical href=http://ipeluffo.github.io/apache_airflow_kubernetes/><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><link rel=stylesheet href=/css/style.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Running Apache Airflow locally on Kubernetes (minikube)","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/ipeluffo.github.io\/apache_airflow_kubernetes\/"},"genre":"posts","keywords":"apache airflow, airflow, kubernetes","wordcount":3041,"url":"http:\/\/ipeluffo.github.io\/apache_airflow_kubernetes\/","datePublished":"2020-04-12","dateModified":"2020-04-12","author":{"@type":"Person","name":"Ignacio"},"description":""}</script></head><body><script>if(!window.localStorage||!window.localStorage.getItem('theme')){window.isDark=window.matchMedia('(prefers-color-scheme: dark)').matches;}else{window.isDark=(window.localStorage&&window.localStorage.getItem('theme'))==='dark';}
 window.isDark&&document.body.classList.add('dark-theme');</script><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/>Ignacio Peluffo</a></div><div class=menu><a class=menu-item href=/posts/ rel="noopener noreffer">Posts</a><a class=menu-item href=/tags/ rel="noopener noreffer">Tags</a><a class=menu-item href=/categories/ rel="noopener noreffer">Categories</a><a class=menu-item href=/about/ rel="noopener noreffer">About</a><span class=menu-item>|</span>
 <a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme"><i class="fas fa-adjust fa-fw"></i></a></div></div></header><header class=mobile id=header-mobile><div class=header-wrapper><div class=header-container><div class=header-title><a href=/>Ignacio Peluffo</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ rel="noopener noreffer">Posts</a><a class=menu-item href=/tags/ rel="noopener noreffer">Tags</a><a class=menu-item href=/categories/ rel="noopener noreffer">Categories</a><a class=menu-item href=/about/ rel="noopener noreffer">About</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
 <i class="fas fa-adjust fa-fw"></i></a></div></div></header><script>window.desktopHeaderMode=null;window.mobileHeaderMode=null;</script><main class=main><div class=container><article class="page single"><h1 class="single-title animated flipInX">Running Apache Airflow locally on Kubernetes (minikube)</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>Ignacio</a>
@@ -11,7 +11,7 @@ window.isDark&&document.body.classList.add('dark-theme');</script><div class=wra
 <i class="far fa-folder fa-fw"></i>Airflow
 </a>&nbsp;<a href=/categories/kubernetes>
 <i class="far fa-folder fa-fw"></i>Kubernetes</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-04-12>2020-04-12</time>&nbsp;
-<i class="fas fa-pencil-alt fa-fw"></i>about 3052 words&nbsp;
+<i class="fas fa-pencil-alt fa-fw"></i>about 3041 words&nbsp;
 <i class="far fa-clock fa-fw"></i>15 min&nbsp;</div></div><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><div class=toc id=toc-static><details><summary><div class=toc-title><span>Contents</span>
 <span><i class="details icon fas fa-angle-down"></i></span></div></summary><div class=toc-content id=toc-content-static><nav id=TableOfContents><ul><li><a href=#before-we-begin>Before we begin&mldr;</a></li><li><a href=#prerequisites>Prerequisites</a></li><li><a href=#introduction>Introduction</a><ul><li><a href=#what-are-we-going-to-build>What are we going to build?</a></li><li><a href=#why-airflow-on-kubernetes>Why Airflow on Kubernetes?</a></li></ul></li><li><a href=#docker-image>Docker image</a><ul><li><a href=#customizations>Customizations</a><ul><li><a href=#airflow-dependency>Airflow dependency</a></li><li><a href=#environment-variables>Environment variables</a></li></ul></li></ul></li><li><a href=#kubernetes-objects>Kubernetes objects</a><ul><li><a href=#configmap><code>ConfigMap</code></a><ul><li><a href=#configmap-requirementstxt><code>ConfigMap</code>: <code>requirements.txt</code></a></li><li><a href=#configmap-environment-variables><code>ConfigMap</code>: environment variables</a></li></ul></li><li><a href=#volumes>Volumes</a><ul><li><a href=#volume-logs>Volume: Logs</a></li><li><a href=#volume-requirements-file>Volume: requirements file</a></li><li><a href=#volume-dags-directory>Volume: DAGs directory</a></li></ul></li><li><a href=#postgresql>PostgreSQL</a></li><li><a href=#airflow-webserver>Airflow webserver</a></li><li><a href=#airflow-scheduler>Airflow scheduler</a></li></ul></li><li><a href=#running-airflow-in-kubernetes>Running Airflow in Kubernetes</a></li><li><a href=#conclusion>Conclusion</a></li></ul></nav></div></details></div><div class=content id=content><p>The goal of this guide is to show how to run Airflow entirely on a Kubernetes
 cluster. This means that all Airflow componentes (i.e. webserver, scheduler and workers)
@@ -45,8 +45,8 @@ moment of writing (1.10.9).</p><p>The only issue is that docker-airflow image do
 <a href=https://github.com/puckel/docker-airflow/blob/1.10.9/README.md#usage target=_blank rel="noopener noreffer">https://github.com/puckel/docker-airflow/blob/1.10.9/README.md#usage</a></p><p>However, we can take advantage of some flexibilities of the image definition that will allow us to use <code>KubernetesExecutor</code>.</p><h3 id=customizations>Customizations</h3><h4 id=airflow-dependency>Airflow dependency</h4><p>One key thing that is not present in the image is the extra Kubernetes dependencies from Airflow:
 <a href=https://github.com/puckel/docker-airflow/blob/1.10.9/Dockerfile#L62 target=_blank rel="noopener noreffer">https://github.com/puckel/docker-airflow/blob/1.10.9/Dockerfile#L62</a></p><p>Despite the Dockerimage allows us to add more dependencies setting the <code>AIRFLOW_DEPS</code>
 argument, in this tutorial we&rsquo;re not going to create our own custom docker image, so we&rsquo;re
-using another customization available in the entrypoint script of the image:
-<a href=https://github.com/puckel/docker-airflow/blob/1.10.9/script/entrypoint.sh#L26-L29 target=_blank rel="noopener noreffer">https://github.com/puckel/docker-airflow/blob/1.10.9/script/entrypoint.sh#L26-L29</a></p><p>Thanks to that part of the entrypoint script, we&rsquo;re able to add a <code>requirements.txt</code> file that
+using another customization available in the entry point script of the image:
+<a href=https://github.com/puckel/docker-airflow/blob/1.10.9/script/entrypoint.sh#L26-L29 target=_blank rel="noopener noreffer">https://github.com/puckel/docker-airflow/blob/1.10.9/script/entrypoint.sh#L26-L29</a></p><p>Thanks to that part of the entry point script, we&rsquo;re able to add a <code>requirements.txt</code> file that
 will be used dynamically by the entry point when starting the container. The downside of this
 is that any new pod will need to install this dependency before starting it, making the
 startup time slower. A better solution would be to design a custom and optimal Docker image
@@ -54,10 +54,10 @@ for our purposes that it&rsquo;s out of the scope of this guide.</p><h4 id=envir
 configuration in order to use the executor.</p><p>Similar to what was described above, we have the option to create our own configuration file
 and load it in our custom image or we can override configuration&rsquo;s setting by <a href=https://airflow.apache.org/docs/1.10.9/howto/set-config.html#setting-configuration-options target=_blank rel="noopener noreffer">using environment variables</a>
 .</p><h2 id=kubernetes-objects>Kubernetes objects</h2><h3 id=configmap><code>ConfigMap</code></h3><p>From <a href=https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/ target=_blank rel="noopener noreffer">Kubernetes site</a>
-:</p><blockquote><p>ConfigMaps allow you to decouple configuration artifacts from image content to keep containerized applications portable.</p></blockquote><p>In our case, we&rsquo;re going to create two <code>ConfigMap</code> objects described below.</p><h4 id=configmap-requirementstxt><code>ConfigMap</code>: <code>requirements.txt</code></h4><p>As described above, we need to add a requirements file in order to install Airflow&rsquo;s Kubernetes dependency (i.e. <code>apache-airflow[kubernetes]</code>).</p><p>Although there are different alternatives to implement to create the file, in this case we&rsquo;ll use a
+:</p><blockquote><p>ConfigMaps allow you to decouple configuration artifacts from image content to keep containerized applications portable.</p></blockquote><p>In our case, we&rsquo;re going to create two <code>ConfigMap</code> objects described below.</p><h4 id=configmap-requirementstxt><code>ConfigMap</code>: <code>requirements.txt</code></h4><p>As described above, we need to add a requirements file in order to install Airflow&rsquo;s Kubernetes dependency (i.e. <code>apache-airflow[kubernetes]</code>).</p><p>Kubernetes provides different alternatives to create the file, in this case we&rsquo;ll use a
 <code>ConfigMap</code> that will be later mounted as a <code>Volume</code> in order to create the necessary file in the pod&rsquo;s
 file system. The objective of this guide is not only to show Airflow running on Kubernetes but use and
-learn different tools that Kubernetes provides us.</p><p>Below is the <code>ConfigMap</code> definition:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+learn different tools that the latter provides us.</p><p>Below is the <code>ConfigMap</code> definition:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -71,8 +71,10 @@ learn different tools that Kubernetes provides us.</p><p>Below is the <code>Conf
 </span><span class=w></span><span class=k>data</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=k>requirements.txt</span><span class=p>:</span><span class=w> </span><span class=sd>|
 </span><span class=sd>    apache-airflow[kubernetes]==1.10.9</span><span class=w>
-</span></code></pre></td></tr></table></div></div><h4 id=configmap-environment-variables><code>ConfigMap</code>: environment variables</h4><p>In order to customise Airflow&rsquo;s configuration, we&rsquo;ll set environment variables that override the
-file configuration. To achieve this, we can define the env vars within the Kubernetes object definition or we can also create a <code>ConfigMap</code> and just configure the object to set the env vars from it.</p><p>Below is the <code>ConfigMap</code> for our custom environment variables:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span></code></pre></td></tr></table></div></div><h4 id=configmap-environment-variables><code>ConfigMap</code>: environment variables</h4><p>To customise Airflow&rsquo;s configuration, we&rsquo;ll set environment variables that override the
+file configuration. To achieve this, we can define the env vars within the Kubernetes
+object definition or we can also create a <code>ConfigMap</code> and just configure the object
+to set the env vars from it.</p><p>Below is the <code>ConfigMap</code> for our custom environment variables:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -111,18 +113,17 @@ file configuration. To achieve this, we can define the env vars within the Kuber
 </span></code></pre></td></tr></table></div></div><p>Following is the explanation for each of the env vars:</p><ul><li><code>EXECUTOR</code>: we need this one to dynamically set the Airflow&rsquo;s executor. The <a href=https://github.com/puckel/docker-airflow/blob/1.10.9/script/entrypoint.sh#L13 target=_blank rel="noopener noreffer">docker image entrypoint script uses this env var</a>
 to set the Airflow executor configuration.</li><li><code>POSTGRES_</code>: these env vars are needed since our deployment needs a Postgres server running to which our Airflow components will connect to store information about DAGs and Airflow such as <a href=https://airflow.apache.org/docs/stable/concepts.html#connections target=_blank rel="noopener noreffer">connections</a>
 , <a href=https://airflow.apache.org/docs/stable/concepts.html#variables target=_blank rel="noopener noreffer">variables</a>
-and DAGs&rsquo; information such as tasks&rsquo; state.</li><li><code>LOAD_EX</code>: this env var is used to load Airflow&rsquo;s example DAGs. Feel free to disable it if you want to not see all default DAGs.</li><li><code>AIRFLOW__KUBERNETES__KUBE_CLIENT_REQUEST_ARGS</code>: when developing this guide, I found that Airflow failed
-to parse the configuration file and apparently this value was causing some issues because of the double
+and DAGs&rsquo; information such as tasks&rsquo; state.</li><li><code>LOAD_EX</code>: this env var is used to load Airflow&rsquo;s example DAGs. Feel free to disable it if you don&rsquo;t want to see or use default DAGs.</li><li><code>AIRFLOW__KUBERNETES__KUBE_CLIENT_REQUEST_ARGS</code>: when developing this guide, I found that Airflow failed
+to parse the configuration file and this value was causing some issues because of the double
 brackets in the <a href=https://github.com/puckel/docker-airflow/blob/1.10.9/config/airflow.cfg#L934 target=_blank rel="noopener noreffer">configuration value in the docker image</a>
-.</li><li><code>AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY</code>: all env vars with prefix <code>AIRFLOW__KUBERNETES__</code> are
-specifically for Kubernetes integration on Airflow. As the name suggest, this env var is to specify the
+.</li><li><code>AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY</code>: all env vars with the prefix <code>AIRFLOW__KUBERNETES__</code> are
+specifically for Kubernetes integration on Airflow. As the name suggests, this env var is to specify the
 docker image to be used for workers. In the context of Kubernetes, workers will be run on a Pod.</li><li><code>AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG</code>: this env var is used to specify the docker image tag.</li><li><code>AIRFLOW__KUBERNETES__DAGS_VOLUME_HOST</code>: we&rsquo;ll see this in more detail later. For now, this specifies the
-path of the volume in the host (i.e. cluster node) where DAGs file are stored.</li><li><code>AIRFLOW__KUBERNETES__LOGS_VOLUME_CLAIM</code>: this env var specifies the Kubernetes volume claim to use to
+path of the volume in the host (i.e. cluster node) where DAGs files are stored.</li><li><code>AIRFLOW__KUBERNETES__LOGS_VOLUME_CLAIM</code>: this env var specifies the Kubernetes volume claim to use to
 store and read logs. We&rsquo;ll talk about this in more detail later.</li><li><code>AIRFLOW__KUBERNETES__ENV_FROM_CONFIGMAP_REF</code>: this specifies the name of the <code>ConfigMap</code> that stores the
-env vars which actually is this one. This will allow workers to load env vars from this <code>ConfigMap</code> when
-running.</li></ul><h3 id=volumes>Volumes</h3><p>For each Airflow component (i.e. Kubernetes pod) we&rsquo;re going to setup three volumes for different purposes using multiple Kubernetes tools:</p><ol><li>Volume for Logs</li><li>Volume for requirements file</li><li>Volume for DAGs</li></ol><h4 id=volume-logs>Volume: Logs</h4><p>There are multiple alternatives to save Airflow&rsquo;s logs on a Kubernetes deployment. In this guide we&rsquo;ll
-define a Volume that we&rsquo;ll allow us to persist logs from all Airflow&rsquo;s components. If we decide to not set
-a volume, then Airflow&rsquo;s workers logs would be lost after they finish.</p><p>To achieve this, we need to create a <code>PersistenVolumeClaim</code> object:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+env vars (i.e. this one). This will allow workers to load env vars from this <code>ConfigMap</code> when running.</li></ul><h3 id=volumes>Volumes</h3><p>For each Airflow component (i.e. Kubernetes pod) we&rsquo;re going to set up three volumes for different purposes using multiple Kubernetes tools:</p><ol><li>Volume for Logs</li><li>Volume for requirements file</li><li>Volume for DAGs</li></ol><h4 id=volume-logs>Volume: Logs</h4><p>There are multiple alternatives to save Airflow&rsquo;s logs on a Kubernetes deployment. In this guide, we&rsquo;ll
+define a Volume that will allow us to persist logs from all Airflow&rsquo;s components. If we decide to not set
+a volume, then Airflow&rsquo;s workers&rsquo; logs would be lost after they finish.</p><p>To achieve this, we need to create a <code>PersistenVolumeClaim</code> object:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -151,14 +152,14 @@ information about to <code>PersistentVolume</code> and <code>PersistentVolumeCla
 .</p><p>Important things about this object:</p><ul><li><code>metadata.name</code>: this is the value used in the env var used to set the name of the persistent volume
 claim to be used by Airflow&rsquo;s workers.</li><li><code>accessModes</code>: since the volume claim will be read and write by multiple pods, we need to set a proper
 access mode to allow them to use it.</li></ul><h4 id=volume-requirements-file>Volume: requirements file</h4><p>As mentioned in the section of <code>ConfigMap</code>s, the requirements file is declared as a <code>ConfigMap</code> which will
-be mounted as a file using a volume. This volume is define within a Kubernetes object and looks like:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+be mounted as a file using a volume. This volume is defined within a Kubernetes object and looks like:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml>- <span class=k>name</span><span class=p>:</span><span class=w> </span>requirements-configmap<span class=w>
 </span><span class=w>  </span><span class=k>configMap</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=k>name</span><span class=p>:</span><span class=w> </span>requirements-configmap<span class=w>
-</span></code></pre></td></tr></table></div></div><p>We need to set <code>configMap.name</code> the same value that we use in the config map definition.</p><h4 id=volume-dags-directory>Volume: DAGs directory</h4><p>For the DAGs directory, we&rsquo;ll set something only suitable for local deployments that gives us a lot of
-flexibility when doing tests when we need to test changes on DAGs.</p><p>The definition of this volume looks like the definition below:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span></code></pre></td></tr></table></div></div><p>We need to set <code>configMap.name</code> the same value that we use in the config map definition.</p><h4 id=volume-dags-directory>Volume: DAGs directory</h4><p>For the DAGs directory, we&rsquo;ll use a tool that is only suitable for a local deployment that gives
+us a lot of flexibility when doing tests when we need to test changes on DAGs.</p><p>Below is the definition of this volume:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -169,7 +170,8 @@ flexibility when doing tests when we need to test changes on DAGs.</p><p>The def
 </span></code></pre></td></tr></table></div></div><p>In this case we mount a volume of type <a href=https://kubernetes.io/docs/concepts/storage/volumes/#hostpath target=_blank rel="noopener noreffer"><code>hostPath</code></a>
 .
 This means that the pod&rsquo;s volume is attached to a path (could be a file or a directory) within the cluster
-node. This last part is important, <em>the path should exists in the cluster node and not in the host machine</em>.</p><p>Then, to make this works we can put the files into a directory in the host machine or mount a host directory into the Kubernetes node (in our case the <code>minikube</code> cluster).</p><p>Since this a test environment where we&rsquo;d like to easily change DAGs and run tests, we&rsquo;ll mount a host
+node. This last point is very important, <em>the path should exist in the cluster node and not in the host machine</em>.</p><p>Then, to make this work we can put the files into a directory in the host machine or mount a host directory into
+the Kubernetes node (in our case the <code>minikube</code> cluster).</p><p>Since this a test environment where we&rsquo;d like to easily change DAGs and run tests, we&rsquo;ll mount a host
 folder into the minikube cluster running the following command:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>minikube mount ./dags/:/mnt/airflow/dags
 </code></pre></td></tr></table></div></div><p>When running this command you should see an output like this:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
@@ -200,10 +202,11 @@ folder into the minikube cluster running the following command:</p><div class=hi
 ✅  Successfully mounted ./dags/ to /mnt/airflow/dags
 
 📌  NOTE: This process must stay alive <span class=k>for</span> the mount to be accessible ...
-</code></pre></td></tr></table></div></div><p>Finally, having the mount running, pods will be able to mount cluster node&rsquo;s folder where they&rsquo;ll be able to read and write files which will be written into our host machine.</p><h3 id=postgresql>PostgreSQL</h3><p>In this and the following sections, we&rsquo;ll define the necessary Kubernetes objects to run the
-pods that we need to run Airflow.</p><p>First, we&rsquo;ll define a <code>Deployment</code> and a <code>Service</code> to run a PostgreSQL instance where Airflow
+</code></pre></td></tr></table></div></div><p>Finally, having the mount running, pods will be able to mount the cluster node&rsquo;s folder where they&rsquo;ll
+be able to read and write files which will be written into our host machine.</p><h3 id=postgresql>PostgreSQL</h3><p>In this and the following sections, we&rsquo;ll define the necessary Kubernetes objects to run the
+pods that we need to run Airflow.</p><p>First, we&rsquo;ll define a <code>Deployment</code> and a <code>Service</code> to run a PostgreSQL instance that Airflow
 will use. We can also define a <code>Pod</code> object, but in this case, they&rsquo;ll be automatically created
-when we create the <code>Deployment</code>.</p><p>If you&rsquo;re not familiar with thes Kubernetes concepts, I recommend having a quick read to the
+when we create the <code>Deployment</code>.</p><p>If you&rsquo;re not familiar with these Kubernetes concepts, I recommend having a quick read to the
 links below:</p><ul><li><code>Deployment</code>: <a href=https://kubernetes.io/docs/concepts/workloads/controllers/deployment/ target=_blank rel="noopener noreffer">https://kubernetes.io/docs/concepts/workloads/controllers/deployment/</a></li><li><code>Service</code>: <a href=https://kubernetes.io/docs/concepts/services-networking/service/ target=_blank rel="noopener noreffer">https://kubernetes.io/docs/concepts/services-networking/service/</a></li></ul><p><code>Service</code> definition:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
@@ -224,7 +227,7 @@ links below:</p><ul><li><code>Deployment</code>: <a href=https://kubernetes.io/d
 </span><span class=w>  </span><span class=k>ports</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span>- <span class=k>port</span><span class=p>:</span><span class=w> </span><span class=m>5432</span><span class=w>
 </span><span class=w>    </span><span class=k>targetPort</span><span class=p>:</span><span class=w> </span><span class=m>5432</span><span class=w>
-</span></code></pre></td></tr></table></div></div><p>This Service object will allow us to expone the pod port to be able to connect to the
+</span></code></pre></td></tr></table></div></div><p>This Service object will allow us to expose the pod port to be able to connect to the
 PostgreSQL instance. Kubernetes cluster runs a DNS service that will allow other pods to
 connect to this service using its name (i.e. <code>postgres</code>).</p><p><code>Deployment</code> definition:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -256,9 +259,6 @@ connect to this service using its name (i.e. <code>postgres</code>).</p><p><code
 </span><span class=lnt>28
 </span><span class=lnt>29
 </span><span class=lnt>30
-</span><span class=lnt>31
-</span><span class=lnt>32
-</span><span class=lnt>33
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=k>apiVersion</span><span class=p>:</span><span class=w> </span>apps/v1<span class=w>
 </span><span class=w></span><span class=k>kind</span><span class=p>:</span><span class=w> </span>Deployment<span class=w>
 </span><span class=w></span><span class=k>metadata</span><span class=p>:</span><span class=w>
@@ -267,14 +267,11 @@ connect to this service using its name (i.e. <code>postgres</code>).</p><p><code
 </span><span class=w>  </span><span class=k>selector</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=k>matchLabels</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span><span class=k>app</span><span class=p>:</span><span class=w> </span>postgres<span class=w>
-</span><span class=w>
 </span><span class=w>  </span><span class=k>replicas</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
-</span><span class=w>
 </span><span class=w>  </span><span class=k>template</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=k>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span><span class=k>labels</span><span class=p>:</span><span class=w>
 </span><span class=w>        </span><span class=k>app</span><span class=p>:</span><span class=w> </span>postgres<span class=w>
-</span><span class=w>
 </span><span class=w>    </span><span class=k>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span><span class=k>containers</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>postgres<span class=w>
@@ -293,7 +290,7 @@ connect to this service using its name (i.e. <code>postgres</code>).</p><p><code
 </span><span class=w>        </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>POSTGRES_DB<span class=w>
 </span><span class=w>          </span><span class=k>value</span><span class=p>:</span><span class=w> </span>airflow<span class=w>
 </span></code></pre></td></tr></table></div></div><p>For the deployment, we specify that the number of replicas should be one and the necessary env
-vars to setup the default user and database to be created when the container starts.</p><h3 id=airflow-webserver>Airflow webserver</h3><p>Now, we&rsquo;re going to go through the definition of the <code>Service</code> and <code>Deployment</code> objects for
+vars to set up the default user and database to be created when the container starts.</p><h3 id=airflow-webserver>Airflow webserver</h3><p>Now, we&rsquo;re going to go through the definition of the <code>Service</code> and <code>Deployment</code> objects for
 the Airflow webserver. In this case, we need a <code>Service</code> since we need to connect to the
 webserver from our machine and for that we&rsquo;ll need to expose the port from the cluster.</p><p><code>Service</code> definition:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -367,29 +364,21 @@ the service from our machine. For more info: <a href=https://kubernetes.io/docs/
 </span><span class=lnt>44
 </span><span class=lnt>45
 </span><span class=lnt>46
-</span><span class=lnt>47
-</span><span class=lnt>48
-</span><span class=lnt>49
-</span><span class=lnt>50
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=k>apiVersion</span><span class=p>:</span><span class=w> </span>apps/v1<span class=w>
 </span><span class=w></span><span class=k>kind</span><span class=p>:</span><span class=w> </span>Deployment<span class=w>
 </span><span class=w></span><span class=k>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=k>name</span><span class=p>:</span><span class=w> </span>airflow-webserver<span class=w>
 </span><span class=w>  </span><span class=k>labels</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=k>app</span><span class=p>:</span><span class=w> </span>airflow-k8s<span class=w>
-</span><span class=w>
 </span><span class=w></span><span class=k>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=k>selector</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=k>matchLabels</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span><span class=k>app</span><span class=p>:</span><span class=w> </span>airflow-webserver<span class=w>
-</span><span class=w>
 </span><span class=w>  </span><span class=k>replicas</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
-</span><span class=w>
 </span><span class=w>  </span><span class=k>template</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=k>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span><span class=k>labels</span><span class=p>:</span><span class=w>
 </span><span class=w>        </span><span class=k>app</span><span class=p>:</span><span class=w> </span>airflow-webserver<span class=w>
-</span><span class=w>
 </span><span class=w>    </span><span class=k>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span><span class=k>containers</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>airflow-webserver<span class=w>
@@ -421,9 +410,9 @@ the service from our machine. For more info: <a href=https://kubernetes.io/docs/
 </span><span class=w>        </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>logs-persistent-storage<span class=w>
 </span><span class=w>          </span><span class=k>persistentVolumeClaim</span><span class=p>:</span><span class=w>
 </span><span class=w>              </span><span class=k>claimName</span><span class=p>:</span><span class=w> </span>airflow-logs-pvc<span class=w>
-</span></code></pre></td></tr></table></div></div><p>Few comments about this definition:</p><ul><li><code>volumes</code> section: as mentioned on the <code>Volumes</code> section of this guide, we need to define the volumes to be used by the pods. So in this case we define one volume for the logs, one for the requirements file and one for the logs persistent volume claim.</li><li><code>volumeMounts</code>: to be able to use the volumes, we need to specify how they should be mounted on within the pod and this section is used for that.</li><li><code>ports</code>: define the pod&rsquo;s port to expose.</li><li><code>resources</code>: in this example we just specified the maximum amount of memory allowed to be used by the pod.</li></ul><h3 id=airflow-scheduler>Airflow scheduler</h3><p>In the case of the scheduler, we only need to create a deployment since it doesn&rsquo;t expose any
-service that other workers need to connect to it. However, scheduler is responsible of creating
-workers, in this case pods, to run Airflow&rsquo;s tasks so we need to give the needed permissions
+</span></code></pre></td></tr></table></div></div><p>Few comments about this definition:</p><ul><li><code>volumes</code> section: as mentioned on the <code>Volumes</code> section of this guide, we need to define the volumes to be used by the pods. So, in this case, we define one volume for the logs, one for the requirements file and one for the logs persistent volume claim.</li><li><code>volumeMounts</code>: to be able to use the volumes, we need to specify how they should be mounted on within the pod and this section is used for that.</li><li><code>ports</code>: define the pod&rsquo;s port to expose.</li><li><code>resources</code>: in this example, we just specified the maximum amount of memory allowed to be used by the pod.</li></ul><h3 id=airflow-scheduler>Airflow scheduler</h3><p>In the case of the scheduler, we only need to create a deployment since it doesn&rsquo;t expose any
+service that other workers need to connect to. However, the scheduler is responsible of creating
+workers (i.e. pods) to run Airflow&rsquo;s tasks so we need to give the needed permissions
 to the scheduler to be able to manage pods on the cluster like creating and deleting them. To
 achieve this, we need to define a <code>ClusterRole</code> and <code>ClusterRoleBinding</code> Kubernetes objects.</p><p><code>Deployment</code> definition:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -470,29 +459,21 @@ achieve this, we need to define a <code>ClusterRole</code> and <code>ClusterRole
 </span><span class=lnt>43
 </span><span class=lnt>44
 </span><span class=lnt>45
-</span><span class=lnt>46
-</span><span class=lnt>47
-</span><span class=lnt>48
-</span><span class=lnt>49
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=k>apiVersion</span><span class=p>:</span><span class=w> </span>apps/v1<span class=w>
 </span><span class=w></span><span class=k>kind</span><span class=p>:</span><span class=w> </span>Deployment<span class=w>
 </span><span class=w></span><span class=k>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=k>name</span><span class=p>:</span><span class=w> </span>airflow-scheduler<span class=w>
 </span><span class=w>  </span><span class=k>labels</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=k>app</span><span class=p>:</span><span class=w> </span>airflow-k8s<span class=w>
-</span><span class=w>
 </span><span class=w></span><span class=k>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span><span class=k>selector</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=k>matchLabels</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span><span class=k>app</span><span class=p>:</span><span class=w> </span>airflow-scheduler<span class=w>
-</span><span class=w>
 </span><span class=w>  </span><span class=k>replicas</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
-</span><span class=w>
 </span><span class=w>  </span><span class=k>template</span><span class=p>:</span><span class=w>
 </span><span class=w>    </span><span class=k>metadata</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span><span class=k>labels</span><span class=p>:</span><span class=w>
 </span><span class=w>        </span><span class=k>app</span><span class=p>:</span><span class=w> </span>airflow-scheduler<span class=w>
-</span><span class=w>
 </span><span class=w>    </span><span class=k>spec</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span><span class=k>containers</span><span class=p>:</span><span class=w>
 </span><span class=w>      </span>- <span class=k>name</span><span class=p>:</span><span class=w> </span>airflow-scheduler<span class=w>
@@ -721,7 +702,8 @@ persistentvolumeclaim <span class=s2>&#34;airflow-logs-pvc&#34;</span> deleted
 </span></code></pre></td><td class=lntd><pre class=chroma><code class=language-bash data-lang=bash>➜ kubectl get pods,deploy,svc,pv,pvc
 NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT<span class=o>(</span>S<span class=o>)</span>   AGE
 service/kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   25d
-</code></pre></td></tr></table></div></div><h2 id=conclusion>Conclusion</h2><p>We reached the end of this tutorial and we could see that running a whole Airflow deployment
-on a local Kubernetes cluster was straightforward.</p><p>As mentioned in the beginning, the objective of this guide was to use several tools from
+</code></pre></td></tr></table></div></div><h2 id=conclusion>Conclusion</h2><p>We reached the end of this guide where we saw that running a whole Airflow deployment
+on a local Kubernetes cluster is straightforward.</p><p>As mentioned at the beginning, the objective of this guide is to use several tools from
 Kubernetes and many things should be changed for a deployment in a production environment.
-This deployment allow to quickly do tests, if you have a DAG you should be able to put it in the <code>dags</code> folder and immediately see it on the UI.</p><p>So that&rsquo;s it for the tutorial, I hope it was useful and help you to continue learning about Kubernetes and Apache Airflow.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>The article was updated on 2020-04-12</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=http://ipeluffo.github.io/apache_airflow_kubernetes/ data-title="Running Apache Airflow locally on Kubernetes (minikube)" data-hashtags="apache airflow,airflow,kubernetes"><i class="fab fa-twitter fa-fw"></i></a><a href=javascript:void(0); title="Share on Linkedin" data-sharer=linkedin data-url=http://ipeluffo.github.io/apache_airflow_kubernetes/><i class="fab fa-linkedin fa-fw"></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=http://ipeluffo.github.io/apache_airflow_kubernetes/ data-title="Running Apache Airflow locally on Kubernetes (minikube)"><i class="fab fa-hacker-news fa-fw"></i></a><a href=javascript:void(0); title="Share on Reddit" data-sharer=reddit data-url=http://ipeluffo.github.io/apache_airflow_kubernetes/><i class="fab fa-reddit fa-fw"></i></a></span></div></div></div><div class=post-info-more><section><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/apache-airflow>apache airflow</a>,&nbsp;<a href=/tags/airflow>airflow</a>,&nbsp;<a href=/tags/kubernetes>kubernetes</a></section><section><span><a href=javascript:window.history.back();>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav></div></div><div class=comment></div></article></div></main><footer class=footer><div class=copyright><div class=copyright-line>Powered by <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreffer">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="external nofollow noopener noreffer"><i class="far fa-heart fa-fw"></i>LoveIt</a></div><div class=copyright-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2020</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>Ignacio</a></span></div></div></footer></div><a href=# class="dynamic-to-top animated faster" id=dynamic-to-top><i class="fas fa-chevron-up fa-fw"></i></a><script>document.addEventListener('DOMContentLoaded',function(){lightGallery(document.getElementById('content'),{selector:'.lightgallery',speed:400,hideBarsDelay:2000,thumbnail:true,exThumbImage:'data-thumbnail',thumbWidth:80,thumbContHeight:80,});});</script><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script src=/lib/smooth-scroll/smooth-scroll.polyfills.min.js></script><script src=/lib/sharer/sharer.min.js></script><script src=/lib/lazysizes/lazysizes.min.js></script><script src=/lib/lightgallery/lightgallery.min.js></script><script src=/lib/lightgallery/lg-thumbnail.min.js></script><script src=/lib/lightgallery/lg-zoom.min.js></script><script src=/js/theme.min.js></script><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;ga('create','UA-163511292-1','auto');ga('set','anonymizeIp',true);ga('send','pageview');}</script><script async src=https://www.google-analytics.com/analytics.js></script></body></html>
+This deployment allows developers to quickly do tests, if you have a DAG you should be able
+to put it in the <code>dags</code> folder and immediately see it on the UI.</p><p>So that&rsquo;s it for the guide, I hope it was useful and help you to continue learning about Kubernetes and Apache Airflow.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>The article was updated on 2020-04-12</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=http://ipeluffo.github.io/apache_airflow_kubernetes/ data-title="Running Apache Airflow locally on Kubernetes (minikube)" data-hashtags="apache airflow,airflow,kubernetes"><i class="fab fa-twitter fa-fw"></i></a><a href=javascript:void(0); title="Share on Linkedin" data-sharer=linkedin data-url=http://ipeluffo.github.io/apache_airflow_kubernetes/><i class="fab fa-linkedin fa-fw"></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=http://ipeluffo.github.io/apache_airflow_kubernetes/ data-title="Running Apache Airflow locally on Kubernetes (minikube)"><i class="fab fa-hacker-news fa-fw"></i></a><a href=javascript:void(0); title="Share on Reddit" data-sharer=reddit data-url=http://ipeluffo.github.io/apache_airflow_kubernetes/><i class="fab fa-reddit fa-fw"></i></a></span></div></div></div><div class=post-info-more><section><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/apache-airflow>apache airflow</a>,&nbsp;<a href=/tags/airflow>airflow</a>,&nbsp;<a href=/tags/kubernetes>kubernetes</a></section><section><span><a href=javascript:window.history.back();>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav></div></div><div class=comment></div></article></div></main><footer class=footer><div class=copyright><div class=copyright-line>Powered by <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreffer">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="external nofollow noopener noreffer"><i class="far fa-heart fa-fw"></i>LoveIt</a></div><div class=copyright-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2020</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>Ignacio</a></span></div></div></footer></div><a href=# class="dynamic-to-top animated faster" id=dynamic-to-top><i class="fas fa-chevron-up fa-fw"></i></a><script>document.addEventListener('DOMContentLoaded',function(){lightGallery(document.getElementById('content'),{selector:'.lightgallery',speed:400,hideBarsDelay:2000,thumbnail:true,exThumbImage:'data-thumbnail',thumbWidth:80,thumbContHeight:80,});});</script><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script src=/lib/smooth-scroll/smooth-scroll.polyfills.min.js></script><script src=/lib/sharer/sharer.min.js></script><script src=/lib/lazysizes/lazysizes.min.js></script><script src=/lib/lightgallery/lightgallery.min.js></script><script src=/lib/lightgallery/lg-thumbnail.min.js></script><script src=/lib/lightgallery/lg-zoom.min.js></script><script src=/js/theme.min.js></script><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;ga('create','UA-163511292-1','auto');ga('set','anonymizeIp',true);ga('send','pageview');}</script><script async src=https://www.google-analytics.com/analytics.js></script></body></html>
