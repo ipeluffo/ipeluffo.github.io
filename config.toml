@@ -61,8 +61,6 @@ googleAnalytics = "UA-163511292-1"
 
 # Privacy Info (https://gohugo.io/about/hugo-and-gdpr/)
 [privacy]
-  [privacy.googleAnalytics]
-    anonymizeIP = true
   [privacy.youtube]
     privacyEnhanced = true
 
@@ -102,9 +100,28 @@ googleAnalytics = "UA-163511292-1"
 
 [params]
   # LoveIt theme version
-  version = "0.1.X"
+  version = "0.2.X"
+  description = "Ignacio Peluffo - Blog"
   defaultTheme = "auto"
   gitRepo = "https://github.com/ipeluffo"
+
+  [params.search]
+    enable = true
+    type = "lunr"
+    contentLength = 5000
+    maxResultLength = 10
+
+  [params.header]
+    [params.header.title]
+      name = "Ignacio Peluffo 💻"
+
+  [params.footer]
+    enable = true
+    since = 2020
+    copyright = true
+
+  [params.section]
+    dateFormat = "02/01"
 
   [params.home]
     [params.home.profile]
@@ -118,16 +135,26 @@ googleAnalytics = "UA-163511292-1"
     Linkedin = "ignaciopeluffo"
     Keybase = "ipeluffo"
     Medium = "@ipeluffo"
-  
-  [params.share]
-    enable = true
-    Twitter = true
-    Linkedin = true
-    HackerNews = true
-    Reddit = true
+    RSS = true
 
   [params.page]
     lightgallery = true
 
-  [params.math]
-    enable = false
+    [params.page.code]
+      copy = true
+      maxShownLines = 50
+
+    [params.page.share]
+      enable = true
+      Twitter = true
+      Linkedin = true
+      HackerNews = true
+      Reddit = true
+    
+    [params.page.math]
+      enable = false
+
+  [params.analytics]
+    [params.analytics.google]
+      id = "UA-163511292-1"
+      anonymizeIP = true

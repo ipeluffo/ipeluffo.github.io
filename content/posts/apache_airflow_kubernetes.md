@@ -2,7 +2,6 @@
 title: "Running Apache Airflow locally on Kubernetes (minikube)"
 date: 2020-04-12T19:29:05+01:00
 draft: false
-toc: true
 autoCollapseToc: true
 tags: ["apache airflow", "airflow", "kubernetes"]
 categories: ["airflow", "kubernetes"]
