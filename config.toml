@@ -48,7 +48,7 @@ googleAnalytics = "UA-163511292-1"
     endLevel = 6
 
 [outputs]
-    home = ["HTML", "RSS"]
+    home = ["HTML", "RSS", "JSON"]
     page = ["HTML"]
     section = ["HTML", "RSS"]
     taxonomy = ["HTML", "RSS"]
